@@ -64,6 +64,7 @@ En lugar de una página con secciones, el portfolio es un **escritorio**. Cada a
 - Seis carpetas con papeles asomando: Sobre mí, Proyectos, Formación, Experiencia, Certificaciones y Herramientas.
 - Ventanas que se arrastran, se redimensionan, se enfocan, se minimizan al dock y se amplían con el botón verde.
 - Dock con efecto lupa, GitHub, LinkedIn, Correo y Currículum.
+- Certificaciones en galería, con la miniatura de cada PDF, y vista de lista como alternativa.
 - Visor de PDF tipo Vista Previa para el currículum y los certificados.
 - Formulario de contacto con aspecto de app de correo.
 

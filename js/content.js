@@ -105,6 +105,8 @@ window.CONTENT = {
       "search.none": "Sin resultados",
       "search.sections": "Secciones",
       "search.links": "Enlaces",
+      "view.grid": "Ver como galería",
+      "view.list": "Ver como lista",
 
       "widget.open": "Abrir"
     },
@@ -209,6 +211,8 @@ window.CONTENT = {
       "search.none": "No results",
       "search.sections": "Sections",
       "search.links": "Links",
+      "view.grid": "View as gallery",
+      "view.list": "View as list",
 
       "widget.open": "Open"
     },
@@ -313,6 +317,8 @@ window.CONTENT = {
       "search.none": "Sem resultados",
       "search.sections": "Secções",
       "search.links": "Ligações",
+      "view.grid": "Ver como galeria",
+      "view.list": "Ver como lista",
 
       "widget.open": "Abrir"
     }
@@ -518,6 +524,7 @@ window.CONTENT = {
       issuer: "Pearson / Certiport",
       date: { es: "may. 2026", en: "May 2026", pt: "mai. 2026" },
       file: "assets/docs/Generative_AI_Foundations.pdf",
+      thumb: "assets/img/certificados/Generative_AI_Foundations.webp",
       more: "https://www.credly.com/badges/b21783ce-aed3-4bbe-bb92-189359016fa8/linked_in_profile"
     },
     {
@@ -529,6 +536,7 @@ window.CONTENT = {
       issuer: "Cámara de Comercio de España",
       date: { es: "may. 2026", en: "May 2026", pt: "mai. 2026" },
       file: "assets/docs/diplomaCamaraComercio.pdf",
+      thumb: "assets/img/certificados/diplomaCamaraComercio.webp",
       more: "https://www.camaramiranda.com/event/dinamizacion-ia-empresa/"
     },
     {
@@ -536,6 +544,7 @@ window.CONTENT = {
       issuer: "OpenWebinars",
       date: { es: "oct. 2026", en: "Oct 2026", pt: "out. 2026" },
       file: "assets/docs/certificadoCursoGit.pdf",
+      thumb: "assets/img/certificados/certificadoCursoGit.webp",
       more: "https://academia.openwebinars.net/portada/git"
     },
     {
@@ -543,6 +552,7 @@ window.CONTENT = {
       issuer: { es: "Fundación WordPress", en: "WordPress Foundation", pt: "Fundação WordPress" },
       date: { es: "sept. 2026", en: "Sep 2026", pt: "set. 2026" },
       file: "assets/docs/certificadoCredits.pdf",
+      thumb: "assets/img/certificados/certificadoCredits.webp",
       more: "https://profiles.wordpress.org/diaz827/",
       desc: {
         es: "Programa de la Fundación WordPress que conecta a estudiantes con la comunidad de código abierto: reconocimiento académico y experiencia práctica a cambio de contribuir al proyecto.",
@@ -554,7 +564,8 @@ window.CONTENT = {
       name: { es: "Competencias Digitales Intermedias", en: "Intermediate Digital Skills", pt: "Competências Digitais Intermédias" },
       issuer: "Telefónica Educación Digital",
       date: { es: "may. 2026", en: "May 2026", pt: "mai. 2026" },
-      file: "assets/docs/FormacionDixital.pdf"
+      file: "assets/docs/FormacionDixital.pdf",
+      thumb: "assets/img/certificados/FormacionDixital.webp"
     }
   ],
 

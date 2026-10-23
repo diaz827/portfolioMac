@@ -541,21 +541,43 @@
       </div>`
     }),
 
-    certs: () => ({
-      status: count(C.certs.length + C.otherCerts.length),
-      html: `<div class="pane">
-        <h2 class="pane-title">${t("certs.title")}</h2>
-        <div class="list">
+    certs: win => {
+      const grid = (win.view || "grid") === "grid";
+      const more = c => (c.more ? `<a class="cert-more" href="${c.more}" target="_blank" rel="noopener" data-stop>${t("certs.viewMore")}</a>` : "<span></span>");
+      const viewBtn = (v, label, svg) =>
+        `<button data-action="view" data-value="${v}" aria-pressed="${(win.view || "grid") === v}" aria-label="${esc(label)}" title="${esc(label)}">${svg}</button>`;
+      const iconGrid = '<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1.2"/><rect x="9" y="1.5" width="5.5" height="5.5" rx="1.2"/><rect x="1.5" y="9" width="5.5" height="5.5" rx="1.2"/><rect x="9" y="9" width="5.5" height="5.5" rx="1.2"/></svg>';
+      const iconList = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h12"/></svg>';
+
+      const gallery = `<div class="cert-grid">${C.certs.map((c, i) => `
+          <div class="cert-card" role="button" tabindex="0" data-action="cert" data-key="${i}" title="${t("certs.viewCert")}">
+            <div class="cert-thumb"><img src="${c.thumb}" alt="" loading="lazy" draggable="false"></div>
+            <div class="cert-info">
+              <h3>${esc(L(c.name))}</h3>
+              <p>${esc(L(c.issuer))} · ${esc(L(c.date))}</p>
+              ${c.desc ? `<p class="cert-card-desc">${esc(L(c.desc))}</p>` : ""}
+              ${c.more ? `<a class="cert-more" href="${c.more}" target="_blank" rel="noopener" data-stop>${t("certs.viewMore")}</a>` : ""}
+            </div>
+          </div>`).join("")}</div>`;
+
+      const list = `<div class="list">
           <div class="cert-head"><span>${t("certs.colName")}</span><span>${t("certs.colIssuer")}</span><span>${t("certs.colDate")}</span><span></span></div>
           ${C.certs.map((c, i) => `
           <div class="cert-row" role="button" tabindex="0" data-action="cert" data-key="${i}" title="${t("certs.viewCert")}">
             <span class="cert-name">${ICON.pdf}<span>${esc(L(c.name))}</span></span>
             <span class="cert-issuer">${esc(L(c.issuer))}</span>
             <span class="cert-date">${esc(L(c.date))}</span>
-            ${c.more ? `<a class="cert-more" href="${c.more}" target="_blank" rel="noopener" data-stop>${t("certs.viewMore")}</a>` : "<span></span>"}
+            ${more(c)}
             ${c.desc ? `<p class="cert-desc">${esc(L(c.desc))}</p>` : ""}
           </div>`).join("")}
-        </div>
+        </div>`;
+
+      return {
+      status: count(C.certs.length + C.otherCerts.length),
+      tools: `<div class="segmented segmented-icons" role="group">${viewBtn("grid", t("view.grid"), iconGrid)}${viewBtn("list", t("view.list"), iconList)}</div>`,
+      html: `<div class="pane">
+        <h2 class="pane-title">${t("certs.title")}</h2>
+        ${grid ? gallery : list}
         <h3 class="pane-sub">${t("certs.others")}</h3>
         <div class="list">${C.otherCerts.map(c => `
           <div class="cert-row cert-static">
@@ -566,7 +588,8 @@
           </div>`).join("")}
         </div>
       </div>`
-    }),
+      };
+    },
 
     tools: () => ({
       status: count(C.tools.reduce((n, g) => n + g.items.length, 0)),
@@ -712,7 +735,7 @@
   });
 
   windowsEl.addEventListener("keydown", e => {
-    const row = e.target.closest(".cert-row[data-action]");
+    const row = e.target.closest(".cert-row[data-action], .cert-card[data-action]");
     if (row && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); runAction(row, winOf(row)); }
   });
 
@@ -726,6 +749,7 @@
       else openFolder(node.dataset.target);
     }
     if (a === "filter" && win) { win.filter = node.dataset.value; renderWindow(win); }
+    if (a === "view" && win) { win.view = node.dataset.value; renderWindow(win); }
     if (a === "lang") setLang(node.dataset.value);
     if (a === "cv") openPreview("cv");
     if (a === "mail") openMail();
