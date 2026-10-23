@@ -594,6 +594,8 @@ img { display: block; max-width: 100%; }
     transition: transform .1s;
   }
   .app-icon svg { width: 34px; height: 34px; stroke-width: 1.7; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .18)); }
+  .app-icon.app-art { background: none; box-shadow: none; }
+  .app-icon.app-art svg { width: 100%; height: 100%; stroke-width: initial; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .28)); }
   .desk-icon:active .app-icon { transform: scale(.93); }
   .desk-icon.selected .desk-icon-label { background: none; }
   .desk-icon-label { font-size: 11.5px; font-weight: 500; padding: 0; letter-spacing: -.01em; text-shadow: 0 1px 3px rgba(0, 0, 0, .55); }
@@ -644,6 +646,7 @@ img { display: block; max-width: 100%; }
   }
   .spot-item .app-icon { width: 34px; height: 34px; border-radius: 8px; flex: none; }
   .spot-item .app-icon svg { width: 20px; height: 20px; }
+  .spot-item .app-icon.app-art svg { width: 100%; height: 100%; }
   .spot-none { padding: 30px 0; text-align: center; color: rgba(255, 255, 255, .85); }
 
   /* Barra de inicio: cierra la app abierta */

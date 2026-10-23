@@ -59,15 +59,23 @@
   // Carpeta azul al estilo de macOS, con el símbolo grabado en la parte delantera
   function folderSVG(name, cls = "folder-svg") {
     const id = "f" + Math.random().toString(36).slice(2, 8);
+    // Las hojas asoman solo en las carpetas grandes del escritorio; en los títulos pequeños quedarían como ruido
+    const papers = cls === "folder-svg";
+    const mark = (dx, dy, color, op) =>
+      `<g transform="translate(${26 + dx} ${25 + dy}) scale(.8)" fill="none" stroke="${color}" stroke-opacity="${op}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${GLYPH[name] || ""}</g>`;
     return `<svg class="${cls}" viewBox="0 0 72 60" aria-hidden="true">
       <defs>
-        <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5aa8ef"/><stop offset="1" stop-color="#3283d8"/></linearGradient>
-        <linearGradient id="${id}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ccbfa"/><stop offset="1" stop-color="#55a6f1"/></linearGradient>
+        <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3f95ea"/><stop offset="1" stop-color="#2a70d2"/></linearGradient>
+        <linearGradient id="${id}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fcdff"/><stop offset="1" stop-color="#4b9ff0"/></linearGradient>
       </defs>
       <path d="M7 5h18.5c1.8 0 3 .7 4 2.1L32 11h33a5 5 0 0 1 5 5v35a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V10a5 5 0 0 1 5-5z" fill="url(#${id}b)"/>
-      <rect x="2" y="17" width="68" height="39" rx="5" fill="url(#${id}f)"/>
-      <path d="M7 17.6h58" stroke="#fff" stroke-opacity=".55" stroke-width="1"/>
-      <g transform="translate(26.5 26.5) scale(.8)" fill="none" stroke="#2f7fd0" stroke-opacity=".55" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">${GLYPH[name] || ""}</g>
+      ${papers ? `<rect x="9" y="8" width="52" height="32" rx="3" fill="#fff" transform="rotate(-2.4 35 24)"/>
+      <rect x="12" y="10" width="52" height="32" rx="3" fill="#eef1f6" transform="rotate(2 38 26)"/>
+      <path d="M18 18h22M18 23h30M18 28h18" stroke="#c4cad6" stroke-width="1.6" stroke-linecap="round" transform="rotate(2 38 26)"/>` : ""}
+      <path d="M7 16.5h58a5 5 0 0 1 5 5V51a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V21.5a5 5 0 0 1 5-5z" fill="url(#${id}f)"/>
+      <path d="M7.5 17h57" stroke="#fff" stroke-opacity=".7" stroke-width="1"/>
+      <path d="M2 48v3a5 5 0 0 0 5 5h58a5 5 0 0 0 5-5v-3" fill="none" stroke="#2b6fc4" stroke-opacity=".35" stroke-width="1"/>
+      ${mark(.7, .9, "#fff", ".6")}${mark(0, 0, "#1f63bd", ".62")}
     </svg>`;
   }
 
@@ -728,17 +736,41 @@
 
   // Iconos de app (solo se ven en móvil; en escritorio se ve la carpeta)
   const APP_TILE = {
-    about: ["#6cb8ff", "#2b7be4"],
-    projects: ["#ff7a59", "#e63a2e"],
-    education: ["#86dd5f", "#37b04a"],
-    experience: ["#ffbc47", "#ff8a0d"],
-    certs: ["#b69bff", "#6f4ddb"],
-    tools: ["#a9aeb9", "#6d727e"],
     doc: ["#9aa3b2", "#5f6776"],
     mail: ["#5ac8fa", "#1a7cf0"],
     link: ["#a1a6b0", "#6a6f7a"]
   };
+
+  // Cuadrado de app con degradado, brillo y borde de luz; "__" se sustituye por un id único
+  let artN = 0;
+  function appTile(bg, inner, defs = "") {
+    const id = "ai" + (++artN);
+    const fix = s => s.replace(/__/g, id);
+    const stops = bg.map((c, i) => `<stop offset="${i / (bg.length - 1)}" stop-color="${c}"/>`).join("");
+    return `<svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1">${stops}</linearGradient><clipPath id="${id}c"><rect width="64" height="64" rx="14.5"/></clipPath>${fix(defs)}</defs><g clip-path="url(#${id}c)"><rect width="64" height="64" fill="url(#${id}g)"/>${fix(inner)}<path d="M0 0h64v26C46 31 18 31 0 26z" fill="#fff" opacity=".13"/></g><rect x=".4" y=".4" width="63.2" height="63.2" rx="14.2" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width=".8"/></svg>`;
+  }
+
+  const GOLD = `<linearGradient id="__a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffdf6e"/><stop offset="1" stop-color="#d79614"/></linearGradient>`;
+  const BROWN = `<linearGradient id="__b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a06942"/><stop offset="1" stop-color="#5b3720"/></linearGradient>`;
+
+  // Contactos, Terminal, birrete, maletín, medalla y Ajustes
+  const APP_ART = {
+    about: () => appTile(["#fdfdfe", "#d2d3d9"],
+      `<g fill="#c3c4cb">${[9, 17, 25, 33, 41, 49].map(y => `<rect x="57" y="${y}" width="8" height="3" rx="1.5"/>`).join("")}</g><circle cx="30" cy="23" r="9.5" fill="#8d8e96"/><path d="M12 56c1.5-12 8.5-18 18-18s16.5 6 18 18z" fill="#8d8e96"/>`),
+    projects: () => appTile(["#3b3b40", "#0c0c0e"],
+      `<path d="M16 21l14 11-14 11" fill="none" stroke="#32d74b" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="34" y="40" width="16" height="5.2" rx="2.6" fill="#32d74b"/>`),
+    education: () => appTile(["#8fe36d", "#2ca843"],
+      `<path d="M16 34v11c4.5 4.5 10 6.5 16 6.5s11.5-2 16-6.5V34l-16 7z" fill="#34343b"/><path d="M32 15L6 28l26 13 26-13z" fill="#2a2a30"/><path d="M32 15L6 28l26 6z" fill="#44444c"/><path d="M32 15l26 13-26 6z" fill="#3a3a42"/><path d="M52 29.5v14" stroke="#ffd25a" stroke-width="2" stroke-linecap="round"/><rect x="49.8" y="43" width="4.4" height="7" rx="2" fill="#ffd25a"/>`),
+    experience: () => appTile(["#ffc45e", "#f08700"],
+      `<path d="M24 25v-4.5a4.5 4.5 0 0 1 4.5-4.5h7a4.5 4.5 0 0 1 4.5 4.5V25" fill="none" stroke="#5a3820" stroke-width="3.6"/><rect x="9" y="24" width="46" height="29" rx="5.5" fill="url(#__b)"/><path d="M9 36h46" stroke="#4a2c16" stroke-opacity=".55" stroke-width="2.6"/><rect x="27.5" y="32.5" width="9" height="8.5" rx="2.2" fill="#ffd25a" stroke="#b98311" stroke-width="1"/>`, BROWN),
+    certs: () => appTile(["#fffdf6", "#ece3cd"],
+      `<path d="M25 40L18 58l9-4 4.5 7 3-21z" fill="#e5484d"/><path d="M39 40l7 18-9-4-4.5 7-3-21z" fill="#c93a3f"/><circle cx="32" cy="27" r="16" fill="url(#__a)"/><circle cx="32" cy="27" r="11.5" fill="none" stroke="#fff4c4" stroke-width="1.6"/><path d="M32 20.5l2.1 4.3 4.7.7-3.4 3.3.8 4.7-4.2-2.2-4.2 2.2.8-4.7-3.4-3.3 4.7-.7z" fill="#fff4c4"/>`, GOLD),
+    tools: () => appTile(["#b3b5bd", "#6a6c75"],
+      `<g transform="translate(32 32)"><g fill="#f1f2f5">${[0, 1, 2, 3, 4, 5, 6, 7].map(i => `<rect x="-3.4" y="-22" width="6.8" height="10" rx="1.8" transform="rotate(${i * 45})"/>`).join("")}</g><circle r="16" fill="#f1f2f5"/><circle r="7" fill="#80828b"/></g>`)
+  };
+
   const appIcon = name => {
+    if (APP_ART[name]) return `<span class="app-icon app-art">${APP_ART[name]()}</span>`;
     const [a, b] = APP_TILE[name];
     return `<span class="app-icon" style="--g1:${a};--g2:${b}">${glyph(name)}</span>`;
   };
