@@ -38,7 +38,8 @@
     trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
     mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 7 8.5-7"/>',
     doc: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',
-    link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'
+    link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+    globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>'
   };
   const glyph = (name, cls = "") =>
     `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GLYPH[name]}</svg>`;
@@ -421,9 +422,15 @@
 
   const count = n => (n === 1 ? t("status.item") : t("status.items").replace("{n}", n));
 
+  const langSwitcher = () => `<div class="lang-switch" role="group" aria-label="${esc(t("menu.lang"))}">${glyph("globe")}<div class="segmented">${
+    Object.entries(LANGS).map(([code, name]) =>
+      `<button data-action="lang" data-value="${code}" aria-pressed="${code === lang}" title="${name}" lang="${code}">${code.toUpperCase()}</button>`).join("")
+  }</div></div>`;
+
   const FOLDERS = {
     about: () => ({
       status: t("status.about"),
+      tools: langSwitcher(),
       html: `<div class="pane">
         <div class="about-hero">
           <img class="about-photo" src="assets/img/fotoHome.jpg" alt="Daniel Díaz Canosa" width="150" height="190">
@@ -655,6 +662,7 @@
       else openFolder(node.dataset.target);
     }
     if (a === "filter" && win) { win.filter = node.dataset.value; renderWindow(win); }
+    if (a === "lang") setLang(node.dataset.value);
     if (a === "cv") openPreview("cv");
     if (a === "mail") openMail();
     if (a === "cert") openPreview(node.dataset.key);
@@ -771,7 +779,7 @@
 
     $("#menuLang").innerHTML = Object.entries(LANGS).map(([code, name]) =>
       `<button class="menu-item" role="menuitemradio" aria-checked="${code === lang}" data-menu-act="lang" data-lang="${code}"><span class="check">${code === lang ? "✓" : ""}</span>${name}</button>`).join("");
-    $("#langTitle").textContent = lang.toUpperCase();
+    $("#langTitle").innerHTML = `${glyph("globe")}<span>${lang.toUpperCase()}</span>`;
     $("#langTitle").setAttribute("aria-label", t("menu.lang"));
   }
 
