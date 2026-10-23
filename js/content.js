@@ -97,6 +97,15 @@ window.CONTENT = {
       "trash.empty": "La papelera está vacía.",
       "trash.joke": "Aquí no tiro ninguna oportunidad.",
 
+      "widget.role": "Estudiante de DAW · A Coruña",
+      "widget.fct": "Disponible para FCT · mar–jun 2027",
+      "search.label": "Buscar",
+      "search.cancel": "Cancelar",
+      "search.placeholder": "Buscar en el portfolio",
+      "search.none": "Sin resultados",
+      "search.sections": "Secciones",
+      "search.links": "Enlaces",
+
       "widget.open": "Abrir"
     },
 
@@ -192,6 +201,15 @@ window.CONTENT = {
       "trash.empty": "The Trash is empty.",
       "trash.joke": "I don't throw any opportunity away here.",
 
+      "widget.role": "DAW student · A Coruña",
+      "widget.fct": "Available for FCT · Mar–Jun 2027",
+      "search.label": "Search",
+      "search.cancel": "Cancel",
+      "search.placeholder": "Search the portfolio",
+      "search.none": "No results",
+      "search.sections": "Sections",
+      "search.links": "Links",
+
       "widget.open": "Open"
     },
 
@@ -286,6 +304,15 @@ window.CONTENT = {
 
       "trash.empty": "O lixo está vazio.",
       "trash.joke": "Aqui não deito fora nenhuma oportunidade.",
+
+      "widget.role": "Estudante de DAW · A Corunha",
+      "widget.fct": "Disponível para FCT · mar–jun 2027",
+      "search.label": "Pesquisar",
+      "search.cancel": "Cancelar",
+      "search.placeholder": "Pesquisar no portfolio",
+      "search.none": "Sem resultados",
+      "search.sections": "Secções",
+      "search.links": "Ligações",
 
       "widget.open": "Abrir"
     }

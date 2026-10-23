@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Daniel Díaz Canosa · Portfolio</title>
   <meta name="description" content="Portfolio de Daniel Díaz Canosa, estudiante de Desarrollo de Aplicaciones Web (DAW) en A Coruña. Disponible para FCT de marzo a junio de 2027.">
-  <meta name="theme-color" content="#c98a4f">
+  <meta name="theme-color" content="#2a221c">
   <meta property="og:title" content="Daniel Díaz Canosa · Portfolio">
   <meta property="og:description" content="Estudiante de DAW en A Coruña. Proyectos web y Java, formación, experiencia y contacto.">
   <meta property="og:image" content="https://soydiaz.pages.dev/assets/img/fotoHome.jpg">
@@ -54,14 +54,19 @@
   <main class="desktop" id="desktop">
     <h1 class="visually-hidden">Daniel Díaz Canosa · Portfolio</h1>
 
-    <!-- Widget (solo móvil) -->
-    <button class="widget" id="widget" type="button">
-      <img src="assets/img/fotoHome.jpg" alt="" width="64" height="64">
-      <span class="widget-text">
-        <strong>Daniel Díaz Canosa</strong>
-        <span class="widget-sub" data-i18n="about.availability"></span>
-      </span>
-    </button>
+    <!-- Widgets (solo móvil) -->
+    <div class="widgets" id="widgets">
+      <button class="widget widget-profile" id="widgetProfile" type="button">
+        <img src="assets/img/fotoHome.jpg" alt="" width="46" height="46">
+        <span class="widget-name">Daniel Díaz Canosa</span>
+        <span class="widget-sub" data-i18n="widget.role"></span>
+      </button>
+      <button class="widget widget-cal" id="widgetCal" type="button">
+        <span class="cal-day" id="calDay"></span>
+        <span class="cal-num" id="calNum"></span>
+        <span class="cal-text" data-i18n="widget.fct"></span>
+      </button>
+    </div>
 
     <nav class="desktop-icons" id="desktopIcons" aria-label="Carpetas"></nav>
     <div class="windows" id="windows"></div>
@@ -109,6 +114,23 @@
       </button>
     </nav>
   </footer>
+
+  <!-- Búsqueda estilo iPhone (solo móvil) -->
+  <button class="search-pill" id="searchPill" type="button">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+    <span data-i18n="search.label">Buscar</span>
+  </button>
+  <div class="spotlight" id="spotlight" hidden>
+    <div class="spotlight-box" role="dialog" aria-modal="true">
+      <div class="spotlight-field">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+        <input id="spotlightInput" type="search" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button type="button" id="spotlightCancel" data-i18n="search.cancel">Cancelar</button>
+      </div>
+      <div class="spotlight-results" id="spotlightResults"></div>
+    </div>
+  </div>
+  <button class="home-indicator" id="homeIndicator" type="button" aria-label="Inicio"></button>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

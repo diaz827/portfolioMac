@@ -91,7 +91,7 @@
   const deskSize = () => ({ w: desktopEl.clientWidth, h: desktopEl.clientHeight });
   const dockSpace = () => ($(".dock").offsetHeight || 64) + 18;
 
-  function createWindow({ id, kind, sidebar = false, width, height }) {
+  function createWindow({ id, kind, sidebar = false, width, height, from = null }) {
     const el = document.createElement("section");
     el.className = "window resizable" + (sidebar ? "" : " no-sidebar");
     el.setAttribute("role", "dialog");
@@ -130,12 +130,19 @@
     Object.assign(el.style, { left: x + "px", top: y + "px", width: w + "px", height: h + "px" });
     windowsEl.appendChild(el);
 
+    // La barra de navegación (móvil) muestra su línea inferior al desplazar el contenido
+    const scroller = $(".win-content", el);
+    scroller.addEventListener("scroll", () => el.classList.toggle("scrolled", scroller.scrollTop > 4), { passive: true });
+
     const win = { id, kind, el, history: [], hi: -1, folder: null, filter: "all", doc: null, minimized: false, maximized: false };
     wins.set(id, win);
     bindDrag(win);
     el.addEventListener("pointerdown", () => focusWindow(win), true);
 
     if (isMobile()) {
+      // La app se abre (y se cierra) desde el icono que la lanzó, como en iOS
+      const r = from && from.getBoundingClientRect();
+      el.style.transformOrigin = r && r.width ? `${r.left + r.width / 2}px ${r.top + r.height / 2}px` : "50% 100%";
       try { history.pushState({ win: id }, ""); } catch (e) {}
     }
     return win;
@@ -258,8 +265,14 @@
   }
 
   // Mantiene las ventanas dentro de la pantalla al cambiar su tamaño
+  let wasMobile = isMobile();
   addEventListener("resize", () => {
     syncMobileState();
+    if (isMobile() !== wasMobile) {
+      // Al cruzar entre escritorio y móvil, "Sobre mí" cambia de página corta a larga
+      wasMobile = isMobile();
+      wins.forEach(w => { if (w.kind === "finder" && w.folder === "about") renderWindow(w); });
+    }
     if (isMobile()) return;
     const { w: dw, h: dh } = deskSize();
     wins.forEach(win => {
@@ -282,7 +295,7 @@
       return existing;
     }
     const big = folder === "about" || folder === "projects";
-    const win = createWindow({ id: "finder-" + Date.now(), kind: "finder", sidebar: true, width: big ? 900 : 760, height: big ? 620 : 540 });
+    const win = createWindow({ id: "finder-" + Date.now(), kind: "finder", sidebar: true, width: big ? 900 : 760, height: big ? 620 : 540, from: $(`.desk-icon[data-folder="${folder}"] .app-icon`) });
     win.folder = folder;
     win.history = [folder];
     win.hi = 0;
@@ -326,7 +339,7 @@
       return;
     }
     const { h } = deskSize();
-    const win = createWindow({ id, kind: "preview", width: 720, height: Math.max(520, h - 60) });
+    const win = createWindow({ id, kind: "preview", width: 720, height: Math.max(520, h - 60), from: key === "cv" ? $('[data-dock="cv"] .dock-icon') : null });
     win.doc = docFor(key);
     renderWindow(win);
     focusWindow(win);
@@ -340,7 +353,7 @@
       if (existing.minimized) restoreWindow(existing); else focusWindow(existing);
       return;
     }
-    const win = createWindow({ id: "mail", kind: "mail", width: 600, height: 640 });
+    const win = createWindow({ id: "mail", kind: "mail", width: 600, height: 640, from: $('[data-dock="mail"] .dock-icon') });
     renderWindow(win);
     focusWindow(win);
     bounceDock("mail");
@@ -376,6 +389,8 @@
       $(".win-status", el).textContent = view.status || "";
       $(".side-body", el).innerHTML = sidebarHTML(win.folder);
       content.scrollTop = 0;
+      win.section = win.folder;
+      bindSectionSpy(win);
     }
 
     if (win.kind === "preview") {
@@ -439,9 +454,9 @@
             <h2 class="about-name">Daniel Díaz Canosa</h2>
             <p>${t("about.text")}</p>
             <div class="about-actions">
-              <button class="btn btn-primary" data-action="open" data-target="projects">${t("about.btnProjects")}</button>
-              <button class="btn" data-action="cv">${t("about.btnCv")}</button>
-              <button class="btn" data-action="mail">${t("about.btnContact")}</button>
+              <button class="btn btn-primary" data-action="open" data-target="projects"><span class="btn-ico">${glyph("projects")}</span>${t("about.btnProjects")}</button>
+              <button class="btn" data-action="cv"><span class="btn-ico">${glyph("doc")}</span>${t("about.btnCv")}</button>
+              <button class="btn" data-action="mail"><span class="btn-ico">${glyph("mail")}</span>${t("about.btnContact")}</button>
             </div>
           </div>
         </div>
@@ -563,6 +578,44 @@
     })
   };
 
+  // En el móvil, "Sobre mí" es una sola página larga que recorre todas las secciones
+  const LONG_SECTIONS = ["projects", "education", "experience", "certs", "tools"];
+  const aboutOnly = FOLDERS.about;
+  FOLDERS.about = win => {
+    const view = aboutOnly(win);
+    if (!isMobile()) return view;
+    const rest = LONG_SECTIONS.map(f =>
+      `<section class="scroll-section" data-section="${f}">${FOLDERS[f](win).html}</section>`).join("");
+    return { ...view, html: view.html + rest, status: "" };
+  };
+
+  // El título de la ventana sigue a la sección que se está viendo
+  function setFinderTitle(win, folder) {
+    if (win.section === folder) return;
+    win.section = folder;
+    $(".win-title", win.el).innerHTML = folderSVG(folder, "") + `<span>${esc(t("folder." + folder))}</span>`;
+  }
+
+  function bindSectionSpy(win) {
+    const content = $(".win-content", win.el);
+    if (content._spy) return;
+    content._spy = true;
+    content.addEventListener("scroll", () => {
+      if (!isMobile() || win.folder !== "about") return;
+      const sections = $$("[data-section]", content);
+      const limit = content.getBoundingClientRect().top + 70;
+      let current = "about";
+      sections.forEach(s => {
+        if (s.getBoundingClientRect().top <= limit) current = s.dataset.section;
+      });
+      // Al llegar al final, la última sección cuenta aunque no pueda subir hasta arriba
+      if (sections.length && content.scrollTop + content.clientHeight >= content.scrollHeight - 4) {
+        current = sections[sections.length - 1].dataset.section;
+      }
+      setFinderTitle(win, current);
+    }, { passive: true });
+  }
+
   function renderMail(win, title, tools, content) {
     win.el.setAttribute("aria-label", t("mail.title"));
     title.innerHTML = `<span>${t("mail.title")}</span>`;
@@ -658,7 +711,10 @@
   function runAction(node, win) {
     const a = node.dataset.action;
     if (a === "open") {
-      if (win && win.kind === "finder") navigate(win, node.dataset.target);
+      // En móvil, desde "Sobre mí" se baja hasta la sección en lugar de abrir otra ventana
+      const section = isMobile() && win && win.folder === "about" && $(`[data-section="${node.dataset.target}"]`, win.el);
+      if (section) section.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "start" });
+      else if (win && win.kind === "finder") navigate(win, node.dataset.target);
       else openFolder(node.dataset.target);
     }
     if (a === "filter" && win) { win.filter = node.dataset.value; renderWindow(win); }
@@ -670,12 +726,29 @@
 
   // ─── Escritorio ───────────────────────────────────────────────────────────
 
+  // Iconos de app (solo se ven en móvil; en escritorio se ve la carpeta)
+  const APP_TILE = {
+    about: ["#6cb8ff", "#2b7be4"],
+    projects: ["#ff7a59", "#e63a2e"],
+    education: ["#86dd5f", "#37b04a"],
+    experience: ["#ffbc47", "#ff8a0d"],
+    certs: ["#b69bff", "#6f4ddb"],
+    tools: ["#a9aeb9", "#6d727e"],
+    doc: ["#9aa3b2", "#5f6776"],
+    mail: ["#5ac8fa", "#1a7cf0"],
+    link: ["#a1a6b0", "#6a6f7a"]
+  };
+  const appIcon = name => {
+    const [a, b] = APP_TILE[name];
+    return `<span class="app-icon" style="--g1:${a};--g2:${b}">${glyph(name)}</span>`;
+  };
+
   function renderDesktop() {
     const icons = $("#desktopIcons");
     icons.setAttribute("aria-label", t("side.favorites"));
     icons.innerHTML = C.folders.map(f => `
       <button class="desk-icon" data-folder="${f}" type="button">
-        ${folderSVG(f)}
+        ${folderSVG(f)}${appIcon(f)}
         <span class="desk-icon-label">${esc(t("folder." + f))}</span>
       </button>`).join("");
   }
@@ -693,7 +766,9 @@
     }
   });
 
-  $("#widget").addEventListener("click", () => openFolder("about"));
+  $("#widgetProfile").addEventListener("click", () => openFolder("about"));
+  $("#widgetCal").addEventListener("click", openMail);
+  $("#homeIndicator").addEventListener("click", () => { const top = topWindow(); if (top) closeWindow(top); });
 
   // ─── Dock ─────────────────────────────────────────────────────────────────
 
@@ -862,6 +937,8 @@
     clock.textContent = `${date} ${time}`;
     clock.dateTime = now.toISOString();
     $(".menubar-left").dataset.time = time;
+    $("#calDay").textContent = new Intl.DateTimeFormat(loc, { weekday: "long" }).format(now);
+    $("#calNum").textContent = now.getDate();
   }
 
   // ─── Idioma ───────────────────────────────────────────────────────────────
@@ -903,6 +980,65 @@
   }
 
   // ─── Arranque ─────────────────────────────────────────────────────────────
+
+  // ─── Búsqueda estilo iPhone (móvil) ───────────────────────────────────────
+
+  const spot = $("#spotlight");
+  const spotInput = $("#spotlightInput");
+  const spotResults = $("#spotlightResults");
+  const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  let spotItems = [];
+
+  function spotCatalog() {
+    return [
+      ...C.folders.map(f => ({ group: "sections", label: t("folder." + f), icon: f, run: () => openFolder(f) })),
+      { group: "links", label: t("dock.cv"), icon: "doc", run: () => openPreview("cv") },
+      { group: "links", label: t("dock.mail"), icon: "mail", run: openMail },
+      { group: "links", label: "GitHub", icon: "link", href: C.links.github },
+      { group: "links", label: "LinkedIn", icon: "link", href: C.links.linkedin }
+    ];
+  }
+
+  function renderSpot() {
+    const q = norm(spotInput.value.trim());
+    spotItems = spotCatalog().filter(i => !q || norm(i.label).includes(q));
+    if (!spotItems.length) {
+      spotResults.innerHTML = `<p class="spot-none">${t("search.none")}</p>`;
+      return;
+    }
+    let html = "", group = "";
+    spotItems.forEach((i, idx) => {
+      if (i.group !== group) { group = i.group; html += `<h3>${t("search." + group)}</h3>`; }
+      const inner = `${appIcon(i.icon)}<span>${esc(i.label)}</span>`;
+      html += i.href
+        ? `<a class="spot-item" href="${i.href}" target="_blank" rel="noopener">${inner}</a>`
+        : `<button class="spot-item" type="button" data-spot="${idx}">${inner}</button>`;
+    });
+    spotResults.innerHTML = html;
+  }
+
+  function openSpot() {
+    spot.hidden = false;
+    spotInput.value = "";
+    spotInput.placeholder = t("search.placeholder");
+    renderSpot();
+    requestAnimationFrame(() => spotInput.focus());
+  }
+  function closeSpot() { spot.hidden = true; spotInput.blur(); }
+
+  $("#searchPill").addEventListener("click", openSpot);
+  $("#spotlightCancel").addEventListener("click", closeSpot);
+  spotInput.addEventListener("input", renderSpot);
+  spotInput.addEventListener("keydown", e => {
+    if (e.key === "Escape") closeSpot();
+    if (e.key === "Enter") { const first = $(".spot-item", spotResults); if (first) first.click(); }
+  });
+  spot.addEventListener("click", e => { if (e.target === spot) closeSpot(); });
+  spotResults.addEventListener("click", e => {
+    const btn = e.target.closest("[data-spot]");
+    if (btn) { const item = spotItems[Number(btn.dataset.spot)]; closeSpot(); item.run(); }
+    else if (e.target.closest("a")) closeSpot();
+  });
 
   setupDock();
   applyLang();
