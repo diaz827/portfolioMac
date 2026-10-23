@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Daniel Díaz Canosa · Portfolio</title>
+  <meta name="description" content="Portfolio de Daniel Díaz Canosa, estudiante de Desarrollo de Aplicaciones Web (DAW) en A Coruña. Disponible para FCT de marzo a junio de 2027.">
+  <meta name="theme-color" content="#c98a4f">
+  <meta property="og:title" content="Daniel Díaz Canosa · Portfolio">
+  <meta property="og:description" content="Estudiante de DAW en A Coruña. Proyectos web y Java, formación, experiencia y contacto.">
+  <meta property="og:image" content="https://soydiaz.pages.dev/assets/img/fotoHome.jpg">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 52'%3E%3Cpath d='M6 4h16c2 0 3 1 4 2.5L28 9h30a4 4 0 0 1 4 4v33a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z' fill='%233d8fe0'/%3E%3Crect x='2' y='14' width='60' height='36' rx='4' fill='%2363b0f4'/%3E%3C/svg%3E">
+  <link rel="preload" as="image" href="assets/img/fondo.webp" media="(min-width: 768px)">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Barra de menú (en móvil se convierte en barra de estado) -->
+  <header class="menubar" id="menubar">
+    <div class="menubar-left">
+      <div class="menu" data-menu="main">
+        <button class="menu-title menu-logo" aria-haspopup="true" aria-expanded="false" aria-label="Daniel Díaz">
+          <span class="monogram" aria-hidden="true">D</span>
+        </button>
+        <div class="menu-panel" role="menu" id="menuMain"></div>
+      </div>
+      <span class="menu-app" id="menuApp">Finder</span>
+      <div class="menu" data-menu="go">
+        <button class="menu-title" aria-haspopup="true" aria-expanded="false" data-i18n="menu.go">Ir</button>
+        <div class="menu-panel" role="menu" id="menuGo"></div>
+      </div>
+      <div class="menu" data-menu="window">
+        <button class="menu-title" aria-haspopup="true" aria-expanded="false" data-i18n="menu.window">Ventana</button>
+        <div class="menu-panel" role="menu" id="menuWindow"></div>
+      </div>
+    </div>
+
+    <div class="menubar-right">
+      <div class="menu menu-right" data-menu="lang">
+        <button class="menu-title lang-title" aria-haspopup="true" aria-expanded="false" id="langTitle" aria-label="Idioma">ES</button>
+        <div class="menu-panel" role="menu" id="menuLang"></div>
+      </div>
+      <svg class="status-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 18.5a1.6 1.6 0 1 1 0 3.2 1.6 1.6 0 0 1 0-3.2zM5.6 13.4a9 9 0 0 1 12.8 0l-1.7 1.7a6.6 6.6 0 0 0-9.4 0zM2 9.8a14 14 0 0 1 20 0l-1.7 1.7a11.6 11.6 0 0 0-16.6 0z" fill="currentColor"/></svg>
+      <svg class="status-icon battery" viewBox="0 0 30 14" aria-hidden="true"><rect x=".75" y=".75" width="25" height="12.5" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".45"/><rect x="2.6" y="2.6" width="18" height="8.8" rx="2" fill="currentColor"/><path d="M27.6 4.8v4.4c.9-.3 1.4-1.2 1.4-2.2s-.5-1.9-1.4-2.2z" fill="currentColor" opacity=".45"/></svg>
+      <time class="menu-clock" id="clock"></time>
+    </div>
+  </header>
+
+  <!-- Escritorio -->
+  <main class="desktop" id="desktop">
+    <h1 class="visually-hidden">Daniel Díaz Canosa · Portfolio</h1>
+
+    <!-- Widget (solo móvil) -->
+    <button class="widget" id="widget" type="button">
+      <img src="assets/img/fotoHome.jpg" alt="" width="64" height="64">
+      <span class="widget-text">
+        <strong>Daniel Díaz Canosa</strong>
+        <span class="widget-sub" data-i18n="about.availability"></span>
+      </span>
+    </button>
+
+    <nav class="desktop-icons" id="desktopIcons" aria-label="Carpetas"></nav>
+    <div class="windows" id="windows"></div>
+  </main>
+
+  <!-- Dock -->
+  <footer class="dock-wrap">
+    <nav class="dock" id="dock" aria-label="Dock">
+      <a class="dock-item" data-dock="github" target="_blank" rel="noopener">
+        <span class="dock-icon">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gGh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b3f45"/><stop offset="1" stop-color="#16181b"/></linearGradient></defs><rect width="64" height="64" rx="14.5" fill="url(#gGh)"/><path transform="translate(14 14) scale(1.5)" fill="#fff" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        </span>
+        <span class="dock-label" data-i18n="dock.github">GitHub</span>
+      </a>
+      <a class="dock-item" data-dock="linkedin" target="_blank" rel="noopener">
+        <span class="dock-icon">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gLi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1584d4"/><stop offset="1" stop-color="#0a5fa8"/></linearGradient></defs><rect width="64" height="64" rx="14.5" fill="url(#gLi)"/><path transform="translate(17 16) scale(1.25)" fill="#fff" d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S.12 4.88.12 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4v16h-4V8zm7.5 0h3.8v2.2h.05c.53-1 1.83-2.2 3.77-2.2 4.03 0 4.78 2.65 4.78 6.1V24h-4v-8.5c0-2.03-.04-4.64-2.83-4.64-2.83 0-3.27 2.2-3.27 4.5V24H8V8z"/></svg>
+        </span>
+        <span class="dock-label" data-i18n="dock.linkedin">LinkedIn</span>
+      </a>
+      <button class="dock-item" data-dock="mail" type="button">
+        <span class="dock-icon">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gMail" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5ac8fa"/><stop offset="1" stop-color="#1a7cf0"/></linearGradient></defs><rect width="64" height="64" rx="14.5" fill="url(#gMail)"/><rect x="12" y="19" width="40" height="27" rx="3.5" fill="#fff"/><path d="M13.5 21.5 32 35l18.5-13.5" fill="none" stroke="#1a7cf0" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></svg>
+        </span>
+        <span class="dock-label" data-i18n="dock.mail">Correo</span>
+        <span class="dock-dot" aria-hidden="true"></span>
+      </button>
+      <button class="dock-item" data-dock="cv" type="button">
+        <span class="dock-icon">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gCv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fdfdfd"/><stop offset="1" stop-color="#e4e7ec"/></linearGradient></defs><rect width="64" height="64" rx="14.5" fill="url(#gCv)"/><path d="M19 10h18l10 10v32a3 3 0 0 1-3 3H19a3 3 0 0 1-3-3V13a3 3 0 0 1 3-3z" fill="#fff" stroke="#c9ced6" stroke-width="1.2"/><path d="M37 10v7a3 3 0 0 0 3 3h7" fill="#eef0f3" stroke="#c9ced6" stroke-width="1.2"/><circle cx="31.5" cy="28" r="5" fill="#26588b"/><path d="M23 41c1.5-4 5-6 8.5-6s7 2 8.5 6" fill="#26588b"/><rect x="22" y="45" width="19" height="2.4" rx="1.2" fill="#c9ced6"/><rect x="22" y="49" width="13" height="2.4" rx="1.2" fill="#c9ced6"/></svg>
+        </span>
+        <span class="dock-label" data-i18n="dock.cv">Currículum</span>
+        <span class="dock-dot" aria-hidden="true"></span>
+      </button>
+
+      <span class="dock-sep" aria-hidden="true"></span>
+      <div class="dock-minimized" id="dockMinimized"></div>
+
+      <button class="dock-item" data-dock="trash" type="button">
+        <span class="dock-icon dock-icon-plain">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gTr" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d9dde3" stop-opacity=".85"/><stop offset=".5" stop-color="#f7f8fa" stop-opacity=".9"/><stop offset="1" stop-color="#c8cdd4" stop-opacity=".85"/></linearGradient></defs><ellipse cx="32" cy="12" rx="19" ry="4.2" fill="#b9bec6" stroke="#9aa1ab" stroke-width="1"/><path d="M13 12.5 17 56a4 4 0 0 0 4 3.5h22a4 4 0 0 0 4-3.5l4-43.5c-3 2.4-10.6 3.7-19 3.7s-16-1.3-19-3.7z" fill="url(#gTr)" stroke="#a7adb6" stroke-width="1"/><g stroke="#aeb4bd" stroke-width="1.3" opacity=".8"><path d="M23 21l1.6 33"/><path d="M32 21.5V54.5"/><path d="M41 21l-1.6 33"/></g></svg>
+        </span>
+        <span class="dock-label" data-i18n="dock.trash">Papelera</span>
+        <span class="dock-dot" aria-hidden="true"></span>
+      </button>
+    </nav>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <noscript>
+    <div class="noscript">
+      <h2>Daniel Díaz Canosa</h2>
+      <p>Estudiante de Desarrollo de Aplicaciones Web (DAW) en A Coruña. Disponible para FCT de marzo a junio de 2027.</p>
+      <p>
+        <a href="assets/docs/CV_Daniel_Diaz.pdf">Currículum (PDF)</a> ·
+        <a href="mailto:canosadiaz6@gmail.com">canosadiaz6@gmail.com</a> ·
+        <a href="https://github.com/diaz827">GitHub</a> ·
+        <a href="https://www.linkedin.com/in/dani-d%C3%ADaz-canosa-4465793b2/">LinkedIn</a>
+      </p>
+    </div>
+  </noscript>
+
+  <script src="js/content.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
