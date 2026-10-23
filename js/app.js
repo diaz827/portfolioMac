@@ -439,7 +439,6 @@
           </div>
         </div>
         <div class="about-body">
-          <h3 class="pane-title">${t("about.title")}</h3>
           <p class="lead">${t("about.lead")}</p>
           <p>${t("about.p2")}</p>
           <p>${t("about.p3")}</p>
